@@ -1,44 +1,52 @@
+version: "3.8"
+
 services:
   mysql:
-      image: mysql:8.0
-      container_name: mysql
-      restart: unless-stopped
-      ports:
-        - "3306:3306"
-      environment:
-        MYSQL_DATABASE: innyx
-        MYSQL_USER: user
-        MYSQL_PASSWORD: password
-        MYSQL_ROOT_PASSWORD: root
-      volumes:
-        - mysql_data:/var/lib/mysql
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: innyx
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
-  laravel-app:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: laravel-app
+    container_name: laravel_app
     volumes:
       - ./backend:/var/www/html
-    networks:
-      - innyx
     ports:
-      - 8000:80
+      - "8000:8000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: innyx
+      DB_USERNAME: 
+      DB_PASSWORD: 123456
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
   frontend:
     build:
       context: ./frontend
-    container_name: frontend
+      dockerfile: Dockerfile
+    container_name: vue_app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - "8080:8080"
-    networks:
-      - innyx
+      - "5173:5173"
+    command: npm run dev
     depends_on:
-      - laravel-app
-
-networks:
-  innyx:
-    driver: bridge
+      - backend
 
 volumes:
-  mysql_data:
+  db_data:

@@ -1,33 +1,17 @@
+<!-- src/App.vue -->
 <template>
   <div id="app">
-    <h1>Frontend Vue</h1>
-    <p v-if="loading">Carregando mensagem...</p>
-    <p v-else>{{ message }}</p>
+    <ProdutoList />
   </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { getHello } from './services/api';
+<script>
+import ProdutoList from './components/ProdutoList.vue';
 
-const message = ref('');
-const loading = ref(true);
-
-onMounted(async () => {
-  try {
-    const data = await getHello();
-    message.value = data.message;
-  } catch {
-    message.value = 'Erro ao buscar API.';
-  } finally {
-    loading.value = false;
+export default {
+  name: 'App',
+  components: {
+    ProdutoList
   }
-});
+};
 </script>
-
-<style>
-body {
-  font-family: sans-serif;
-  padding: 2rem;
-}
-</style>
