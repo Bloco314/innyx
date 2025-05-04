@@ -15,7 +15,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string|max:100',
+            'nome' => 'required|string|max:100|unique:categorias,nome',
         ]);
 
         $categoria = Categoria::create($request->all());
@@ -31,7 +31,7 @@ class CategoriaController extends Controller
     {
         $categoria = Categoria::findOrFail($id);
         $request->validate([
-            'nome' => 'required|string|max:100',
+            'nome' => 'required|string|max:100|unique:categorias,nome,'.$id,
         ]);
         $categoria->update($request->all());
         return response()->json($categoria);
