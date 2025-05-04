@@ -9,6 +9,6 @@ docker-compose up --build -d
 docker-compose exec backend php artisan migrate
 
 ## Você pode reiniciar as partes individuais do sistema
-docker-compose restart mysql
-docker-compose restart backend
-docker-compose restart frontend
+docker-compose restart mysql <br/>
+docker-compose restart backend <br/>
+docker-compose restart frontend <br/>
