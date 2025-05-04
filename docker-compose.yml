@@ -17,6 +17,7 @@ services:
     container_name: laravel_app
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
     depends_on:
       - mysql
     ports:
