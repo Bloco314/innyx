@@ -32,8 +32,17 @@ class ProdutoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $data = $request->validate([
+            'nome' => 'required|string|max:50',
+            'descricao' => 'required|string|max:200',
+            'preco' => 'required|numeric|min:0',
+            'data_validade' => 'required|date|after_or_equal:today',
+            'imagem' => 'nullable|string',
+            'categoria_id' => 'nullable|exists:categorias,id',
+        ]);
+
         $produto = Produto::findOrFail($id);
-        $produto->update($request->all());
+        $produto->update($data);
 
         return response()->json($produto);
     }
@@ -44,13 +53,20 @@ class ProdutoController extends Controller
 
         return response()->json(null, 204);
     }
-
+    
     public function paginated(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        return Produto::paginate($perPage);
+        $produtos = Produto::paginate($perPage);
+    
+        return response()->json([
+            'items' => $produtos->items(),
+            'total' => $produtos->total(),
+            'current_page' => $produtos->currentPage(),
+            'last_page' => $produtos->lastPage(),
+        ]);
     }
-
+    
     public function filtered(Request $request)
     {
         $query = Produto::query();

@@ -6,10 +6,6 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CategoriaController;
 
-Route::get('/hello', function () {
-    return response()->json(['message' => 'Olá do backend!']);
-}); 
-
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -19,13 +15,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('produtos')->group(function () {
+        Route::get('/paginado', [ProdutoController::class, 'paginated']);
+        Route::get('/filtrado', [ProdutoController::class, 'filtered']);
         Route::post('/', [ProdutoController::class, 'store']);
         Route::get('/', [ProdutoController::class, 'index']);
         Route::get('/{id}', [ProdutoController::class, 'show']);
         Route::put('/{id}', [ProdutoController::class, 'update']);
         Route::delete('/{id}', [ProdutoController::class, 'destroy']);
-        Route::get('/paginado', [ProdutoController::class, 'paginated']);
-        Route::get('/filtrado', [ProdutoController::class, 'filtered']);
     });
 
     Route::prefix('categorias')->group(function () {
