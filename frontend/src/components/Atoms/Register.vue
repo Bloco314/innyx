@@ -1,54 +1,43 @@
-<template>
-  <div>
-    <h2>Registrar</h2>
-    <form @submit.prevent="register">
-      <input v-model="name" placeholder="Nome" />
-      <input v-model="email" placeholder="Email" />
-      <input v-model="password" type="password" placeholder="Senha" />
-      <button type="submit">Registrar</button>
-    </form>
-  </div>
-</template>
-
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import { registerService } from "../../services/service";
+import PrimaryButton from "./PrimaryButton.vue";
+import Input from "./Input.vue";
 
 const name = ref("");
 const email = ref("");
 const password = ref("");
 
 async function register() {
-  await fetch("/sanctum/csrf-cookie", {
-    credentials: "include",
-  });
+  const res = await registerService(name.value, email.value, password.value);
 
-  const token = getCookie("XSRF-TOKEN");
-
-  const res = await fetch("/api/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-XSRF-TOKEN": decodeURIComponent(token),
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    }),
-  });
-
-  if (res.ok) {
+  if (res.success) {
     alert("Registrado com sucesso!");
+    name.value = "";
+    email.value = "";
+    password.value = "";
   } else {
-    alert("Erro ao registrar");
+    alert("Erro ao registrar!");
   }
 }
-
-function getCookie(name) {
-  const cookie = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(name + "="));
-  return cookie?.split("=")[1];
-}
 </script>
+
+<template>
+  <div>
+    <h2>Registrar</h2>
+    <form @submit.prevent="register">
+      <Input v-model="name" placeholder="Nome" />
+      <Input v-model="email" placeholder="Email" />
+      <Input v-model="password" type="password" placeholder="Senha" />
+      <PrimaryButton type="submit">Registrar</PrimaryButton>
+    </form>
+  </div>
+</template>
+
+<style scoped>
+form{
+  input{
+    width: 200px;
+  }
+}
+</style>
