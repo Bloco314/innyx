@@ -30,6 +30,6 @@ conteudo parece com:
 no linux tal configuração não deve ser necessaria
 
 ## Você pode reiniciar as partes individuais do sistema
-docker-compose restart mysql
-docker-compose restart backend
-docker-compose restart frontend
+docker-compose restart mysql <br/>
+docker-compose restart backend <br/>
+docker-compose restart frontend 
