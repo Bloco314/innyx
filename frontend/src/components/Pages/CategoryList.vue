@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { listarCategorias, deletarCategoria } from "../../services/categoryService";
+import {
+  listarCategorias,
+  deletarCategoria,
+} from "../../services/categoryService";
 import SecondaryButton from "../Atoms/SecondaryButton.vue";
 import Spinner from "../Atoms/Spinner.vue";
 import type { Category } from "../../models/category";
@@ -31,38 +34,42 @@ onMounted(() => carregarCategorias());
 
 <template>
   <div id="category-list">
-    <Navigate/>
+    <Navigate />
     <h2>Categorias</h2>
     <Spinner v-if="loading" />
 
     <table v-if="!loading">
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th></th>
-      </tr>
-      <tr v-for="categoria in categorias">
-        <td>{{ categoria.id }}</td>
-        <td>{{ categoria.nome }}</td>
-        <td>
-          <button
-            title="Editar Categoria"
-            class="btn-edit"
-            @click="() => $router.push(`/categorias/editar/${categoria.id}`)"
-          >
-            <i class="glyphicon glyphicon-edit"></i>
-          </button>
-          <button
-            title="Deletar categoria"
-            class="btn-delete"
-            @click="() => excluirCategoria(categoria.id)"
-          >
-            <i class="glyphicon glyphicon-trash"></i>
-          </button>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="categoria in categorias">
+          <td>{{ categoria.id }}</td>
+          <td>{{ categoria.nome }}</td>
+          <td>
+            <button
+              title="Editar Categoria"
+              class="btn-edit"
+              @click="() => $router.push(`/categorias/editar/${categoria.id}`)"
+            >
+              <i class="glyphicon glyphicon-edit"></i>
+            </button>
+            <button
+              title="Deletar categoria"
+              class="btn-delete"
+              @click="() => excluirCategoria(categoria.id)"
+            >
+              <i class="glyphicon glyphicon-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <SecondaryButton @click="()=>$router.push(`/categorias/criar`)">
+    <SecondaryButton @click="() => $router.push(`/categorias/criar`)">
       Criar nova categoria
     </SecondaryButton>
   </div>
@@ -106,8 +113,8 @@ table {
     }
   }
 }
-@media only screen and (max-width: 1000px){
-  table{
+@media only screen and (max-width: 1000px) {
+  table {
     max-width: 80%;
   }
 }

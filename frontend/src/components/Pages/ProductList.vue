@@ -115,49 +115,57 @@ onMounted(() => carregarProdutos());
     <Spinner v-if="loading" />
     <section v-else>
       <table v-if="produtos.length">
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Preço</th>
-          <th>Validade</th>
-          <th>Categoria</th>
-          <th>Imagem</th>
-          <th></th>
-        </tr>
-        <tr v-for="produto in produtos" :key="produto.id">
-          <td>{{ produto.id }}</td>
-          <td>{{ produto.nome }}</td>
-          <td>{{ produto.descricao }}</td>
-          <td>{{ produto.preco.toFixed(2) }}</td>
-          <td>{{ produto.data_validade }}</td>
-          <td>{{ produto.categoria_id }}</td>
-          <td>
-            <div v-if="produto.imagem">
-              <img
-                :src="produto.imagem"
-                alt="Imagem do produto"
-                style="max-width: 200px; max-height: 200px; object-fit: contain"
-              />
-            </div>
-          </td>
-          <td>
-            <button
-              title="Editar produto"
-              class="btn-edit"
-              @click="() => $router.push(`/produtos/editar/${produto.id}`)"
-            >
-              <i class="glyphicon glyphicon-edit"></i>
-            </button>
-            <button
-              title="Deletar produto"
-              class="btn-delete"
-              @click="() => excluirProduto(produto.id)"
-            >
-              <i class="glyphicon glyphicon-trash"></i>
-            </button>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Validade</th>
+            <th>Categoria</th>
+            <th>Imagem</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="produto in produtos" :key="produto.id">
+            <td>{{ produto.id }}</td>
+            <td>{{ produto.nome }}</td>
+            <td>{{ produto.descricao }}</td>
+            <td>{{ produto.preco.toFixed(2) }}</td>
+            <td>{{ produto.data_validade }}</td>
+            <td>{{ produto.categoria_id }}</td>
+            <td>
+              <div v-if="produto.imagem">
+                <img
+                  :src="produto.imagem"
+                  alt="Imagem do produto"
+                  style="
+                    max-width: 200px;
+                    max-height: 200px;
+                    object-fit: contain;
+                  "
+                />
+              </div>
+            </td>
+            <td>
+              <button
+                title="Editar produto"
+                class="btn-edit"
+                @click="() => $router.push(`/produtos/editar/${produto.id}`)"
+              >
+                <i class="glyphicon glyphicon-edit"></i>
+              </button>
+              <button
+                title="Deletar produto"
+                class="btn-delete"
+                @click="() => excluirProduto(produto.id)"
+              >
+                <i class="glyphicon glyphicon-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
       <span v-else>Nenhum produto encontrado.</span>
     </section>
@@ -191,7 +199,7 @@ onMounted(() => carregarProdutos());
         Próxima
       </PrimaryButton>
     </section>
-    <SecondaryButton @click="()=>$router.push(`/produtos/criar`)">
+    <SecondaryButton @click="() => $router.push(`/produtos/criar`)">
       Criar novo produto
     </SecondaryButton>
   </div>
