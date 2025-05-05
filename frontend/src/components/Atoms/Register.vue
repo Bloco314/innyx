@@ -54,6 +54,7 @@ async function register() {
           placeholder="Senha"
           aria-label="Senha"
           required
+          minlength="6"
         />
         <span
           @click="showPassword = !showPassword"
