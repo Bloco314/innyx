@@ -36,8 +36,8 @@ onMounted(() => carregarCategorias());
   <div id="category-list">
     <Navigate />
     <h2>Categorias</h2>
+    <hr />
     <Spinner v-if="loading" />
-
     <table v-if="!loading">
       <thead>
         <tr>
@@ -69,13 +69,17 @@ onMounted(() => carregarCategorias());
         </tr>
       </tbody>
     </table>
-    <SecondaryButton @click="() => $router.push(`/categorias/criar`)">
+    <hr />
+    <SecondaryButton
+      id="btn-create"
+      @click="() => $router.push(`/categorias/criar`)"
+    >
       Criar nova categoria
     </SecondaryButton>
   </div>
 </template>
 
-<style>
+<style scoped>
 #category-list {
   height: 100%;
 }
@@ -112,6 +116,14 @@ table {
       background-color: rgb(204, 43, 43);
     }
   }
+}
+#btn-create {
+  border: 1px solid white;
+  margin-top: 4px;
+}
+#btn-create:hover {
+  color: purple;
+  background-color: white;
 }
 @media only screen and (max-width: 1000px) {
   table {

@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { criarProduto } from "../../services/productService";
 import type { Produto } from "../../models/product";
+import type { Category } from "../../models/category";
 import { useRouter } from "vue-router";
 import Input from "../Atoms/Input.vue";
 import PrimaryButton from "../Atoms/PrimaryButton.vue";
+import { listarCategorias } from "../../services/categoryService";
+import Spinner from "../Atoms/Spinner.vue";
 
 const router = useRouter();
 
@@ -17,6 +20,8 @@ const produto = ref<Produto>({
   imagem: "",
   categoria_id: null,
 });
+const categorias = ref<Category[]>([]);
+const loading = ref(false);
 
 async function handleSubmit() {
   const response = await criarProduto(produto.value);
@@ -37,12 +42,21 @@ function handleFileUpload(event: Event) {
   };
   reader.readAsDataURL(file); // converte para base64
 }
+
+async function carregarCategorias() {
+  loading.value = true;
+  categorias.value = await listarCategorias();
+  loading.value = false;
+}
+
+onMounted(() => carregarCategorias());
 </script>
 
 <template>
   <div id="product-create-page">
     <h2>Criação de produto</h2>
-    <form @submit.prevent="handleSubmit">
+    <Spinner v-if="loading" />
+    <form @submit.prevent="handleSubmit" v-if="!loading">
       <div class="input-wrapper">
         <label>Nome:</label>
         <Input v-model="produto.nome" type="text" required />
@@ -75,8 +89,13 @@ function handleFileUpload(event: Event) {
       </div>
 
       <div class="input-wrapper">
-        <label>Categoria ID:</label>
-        <Input v-model.number="produto.categoria_id" type="number" />
+        <label>Categoria:</label>
+        <select v-model.number="produto.categoria_id" required>
+          <option disabled value="">Selecione uma categoria</option>
+          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
+            {{ cat.nome }}
+          </option>
+        </select>
       </div>
 
       <PrimaryButton id="btn-submit" type="submit">Criar</PrimaryButton>
@@ -112,6 +131,17 @@ form {
   input {
     width: 400px;
   }
+  select {
+    background-color: white;
+    color: black;
+    width: 400px;
+    padding: 6px;
+
+    option {
+      background-color: white;
+      color: black;
+    }
+  }
   #btn-submit {
     margin-top: 12px;
   }
@@ -123,6 +153,9 @@ form {
       width: 100px;
     }
     input {
+      width: 200px;
+    }
+    select {
       width: 200px;
     }
     .input-wrapper {

@@ -141,8 +141,8 @@ onMounted(() => carregarProdutos());
                   :src="produto.imagem"
                   alt="Imagem do produto"
                   style="
-                    max-width: 200px;
-                    max-height: 200px;
+                    max-width: 100px;
+                    max-height: 100px;
                     object-fit: contain;
                   "
                 />
@@ -150,7 +150,7 @@ onMounted(() => carregarProdutos());
             </td>
             <td>
               <button
-                title="Editar produto"
+                title="Ver Detalhes/Editar produto"
                 class="btn-edit"
                 @click="() => $router.push(`/produtos/editar/${produto.id}`)"
               >
@@ -199,7 +199,11 @@ onMounted(() => carregarProdutos());
         Próxima
       </PrimaryButton>
     </section>
-    <SecondaryButton @click="() => $router.push(`/produtos/criar`)">
+    <hr />
+    <SecondaryButton
+      id="btn-create"
+      @click="() => $router.push(`/produtos/criar`)"
+    >
       Criar novo produto
     </SecondaryButton>
   </div>
@@ -251,6 +255,7 @@ table {
   th {
     background-color: #ccc;
     color: black;
+    text-align: center;
   }
   td {
     background-color: white;
@@ -272,5 +277,13 @@ span {
   color: white;
   font-size: 14px;
   margin: 4px;
+}
+#btn-create {
+  border: 1px solid white;
+  margin-top: 4px;
+}
+#btn-create:hover {
+  color: purple;
+  background-color: white;
 }
 </style>

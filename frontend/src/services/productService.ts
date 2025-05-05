@@ -52,11 +52,15 @@ export async function atualizarProduto(id: number, produto: Produto) {
     credentials: "include",
     body: JSON.stringify(produto),
   });
-
-  const data = await res.json();
-  return res.ok
-    ? { success: true, data }
-    : { success: false, message: data.message };
+  try {
+    const data = await res.json();
+    console.log(data);
+    return res.ok
+      ? { success: true, data }
+      : { success: false, message: data.message };
+  } catch (e) {
+    return { success: false, message: "Os dados fornecidos são invalidos" };
+  }
 }
 
 export async function deletarProduto(id: number) {
