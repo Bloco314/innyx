@@ -61,3 +61,26 @@ conteudo parece com:
 }
 
 no linux tal configuração não deve ser necessaria.
+
+---
+
+# Executar Manualmente o frontend e o backend
+> você precisará do composer para instalar as dependencias do backend e do node/npm para as do frontend
+> Além disso você precisará criar seu próprio banco no MySql e configurar o .env para acessa-lo corretamente
+## Dentro do diretorio frontend
+```bash
+npm install
+npm run dev
+```
+## Dentro do diretorio backend
+```bash
+composer install
+php artisan serve
+```
+
+# Se deseja criar uma nova chave de sistema
+> O .env do projeto contém uma chave já criada pra simplificar um pouco os passos da execução
+## Caso sinta necessidade de criar uma nova exclua a linha APP_KEY do .env do backend e execute no diretorio do backend
+```bash
+php artisan key:generate
+```
