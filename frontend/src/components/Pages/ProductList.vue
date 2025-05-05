@@ -8,8 +8,8 @@ import {
 import Spinner from "../Atoms/Spinner.vue";
 import type { Produto } from "../../models/product";
 import PrimaryButton from "../Atoms/PrimaryButton.vue";
-import Input from "../Atoms/Input.vue";
 import SecondaryButton from "../Atoms/SecondaryButton.vue";
+import Input from "../Atoms/Input.vue";
 import Navigate from "../Atoms/Navigate.vue";
 
 const produtos = ref<Produto[]>([]);
@@ -191,6 +191,9 @@ onMounted(() => carregarProdutos());
         Próxima
       </PrimaryButton>
     </section>
+    <SecondaryButton @click="()=>$router.push(`/produtos/criar`)">
+      Criar novo produto
+    </SecondaryButton>
   </div>
 </template>
 

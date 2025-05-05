@@ -2,8 +2,11 @@
 import { ref } from "vue";
 import { criarProduto } from "../../services/productService";
 import type { Produto } from "../../models/product";
+import { useRouter } from "vue-router";
 import Input from "../Atoms/Input.vue";
 import PrimaryButton from "../Atoms/PrimaryButton.vue";
+
+const router = useRouter();
 
 const produto = ref<Produto>({
   id: 0,
@@ -18,7 +21,7 @@ const produto = ref<Produto>({
 async function handleSubmit() {
   const response = await criarProduto(produto.value);
   if (response.success) {
-    window.location.reload();
+    router.back();
   } else {
     alert(`Erro ao criar produto: ${response.message || "Erro desconhecido"}`);
   }
@@ -82,7 +85,7 @@ function handleFileUpload(event: Event) {
 </template>
 
 <style scoped>
-#product-create-page{
+#product-create-page {
   display: flex;
   flex-direction: column;
 }

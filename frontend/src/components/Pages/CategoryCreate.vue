@@ -2,8 +2,11 @@
 import { ref } from "vue";
 import { criarCategoria } from "../../services/categoryService";
 import type { Category } from "../../models/category";
+import { useRouter } from "vue-router";
 import Input from "../Atoms/Input.vue";
 import PrimaryButton from "../Atoms/PrimaryButton.vue";
+
+const router = useRouter();
 
 const categoria = ref<Category>({
   id: 0,
@@ -13,7 +16,7 @@ const categoria = ref<Category>({
 const criar = async () => {
   const response = await criarCategoria(categoria.value);
   if (response.success) {
-    window.location.reload();
+    router.back();
   } else {
     alert(`Erro ao criar produto: ${response.message || "Erro desconhecido"}`);
   }

@@ -1,3 +1,6 @@
+observação: em versões recentes do docker 'compose' se tornou um comando do docker
+então onde você executava 'docker-compose' você pode usar 'docker compose'
+
 # Para executar o sistema
 ## Se não for a primeira vez executando recomendo reiniciar os containers atuais com
 docker-compose down
@@ -5,7 +8,7 @@ docker-compose down
 ## Dentro do diretorio innyx construa a aplicação usando docker
 docker-compose up --build -d
 
-## Durante a primeira execução devem ser executada a migração no backend para criação das tabelas, você pode usar
+## Durante a primeira execução devem ser executada a migração no backend para criação das tabelas, use
 docker-compose exec backend php artisan migrate
 
 ## Troubleshooting
@@ -23,6 +26,8 @@ conteudo parece com:
     "buildkit": true
   }
 }
+
+no linux tal configuração não deve ser necessaria
 
 ## Você pode reiniciar as partes individuais do sistema
 docker-compose restart mysql

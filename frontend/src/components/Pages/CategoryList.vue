@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { listarCategorias, deletarCategoria } from "../../services/categoryService";
+import SecondaryButton from "../Atoms/SecondaryButton.vue";
 import Spinner from "../Atoms/Spinner.vue";
 import type { Category } from "../../models/category";
 import Navigate from "../Atoms/Navigate.vue";
@@ -61,6 +62,9 @@ onMounted(() => carregarCategorias());
         </td>
       </tr>
     </table>
+    <SecondaryButton @click="()=>$router.push(`/categorias/criar`)">
+      Criar nova categoria
+    </SecondaryButton>
   </div>
 </template>
 
