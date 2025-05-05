@@ -8,15 +8,20 @@ import Input from "./Input.vue";
 const router = useRouter();
 const email = ref<string>("");
 const password = ref<string>("");
+const showPassword = ref(false);
+const loading = ref(false);
 
 async function login() {
+  loading.value = true;
   const res = await loginService(email.value, password.value);
 
   if (res.success) {
+    loading.value = false;
     router.push("/produtos/listar");
   } else {
     alert("Não foi possível realizar login");
   }
+  loading.value = false;
 }
 </script>
 
@@ -29,19 +34,39 @@ async function login() {
         type="email"
         placeholder="Email"
         aria-label="Email"
+        required
       />
-      <Input
-        v-model="password"
-        type="password"
-        placeholder="Senha"
-        aria-label="Senha"
-      />
-      <PrimaryButton type="submit">Entrar</PrimaryButton>
+      <div id="pass-wrapper">
+        <Input
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          placeholder="Senha"
+          aria-label="Senha"
+          required
+        />
+        <span
+          @click="showPassword = !showPassword"
+          :title="showPassword ? 'Esconder senha' : 'Mostrar senha'"
+          :class="
+            showPassword
+              ? 'glyphicon glyphicon-eye-close'
+              : 'glyphicon glyphicon-eye-open'
+          "
+        ></span>
+      </div>
+      <PrimaryButton
+        type="submit"
+        :disabled="loading || email == '' || password == ''"
+        >Entrar</PrimaryButton
+      >
     </form>
   </div>
 </template>
 
 <style scoped>
+h2{
+  color: white;
+}
 #login-wrapper {
   display: flex;
   flex-direction: column;
@@ -54,12 +79,21 @@ async function login() {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    
-    input{
+
+    input {
       width: 200px;
     }
     button {
       margin-top: 12px;
+    }
+    #pass-wrapper {
+      position: relative;
+
+      span {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+      }
     }
   }
 }

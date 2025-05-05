@@ -15,11 +15,9 @@ import Navigate from "../Atoms/Navigate.vue";
 const produtos = ref<Produto[]>([]);
 const loading = ref(false);
 const filtered = ref(false);
-
 const page = ref(1);
 const perPage = ref(10);
 const total = ref(0);
-
 const filtroNome = ref("");
 const filtroDescricao = ref("");
 const mostrarFiltros = ref(false);
@@ -60,25 +58,25 @@ const limparFiltros = () => {
 
 async function excluirProduto(id: number) {
   if (!confirm("Tem certeza que deseja excluir este produto?")) return;
-
   const result = await deletarProduto(id);
-  if (result.success) {
-    filtered.value ? aplicarFiltros() : carregarProdutos();
-  } else {
-    alert(`Erro ao excluir: ${result.message}`);
-  }
+  result.success
+    ? filtered.value
+      ? aplicarFiltros()
+      : carregarProdutos()
+    : alert(`Erro ao excluir: ${result.message}`);
 }
 
 onMounted(() => carregarProdutos());
 </script>
 
 <template>
-  <div id="product-list">
+  <div id="product-list" class="container mt-4">
     <Navigate />
-    <h2>Produtos</h2>
-    <hr />
+    <h2 class="text-white mb-2">Produtos</h2>
+    <hr class="border-light" />
 
-    <section v-if="!loading" id="btn-filters-wrapper">
+    <!-- Filtros -->
+    <section v-if="!loading" class="mb-3">
       <SecondaryButton
         @click="mostrarFiltros = !mostrarFiltros"
         title="Mostrar/Esconder Filtros"
@@ -92,88 +90,98 @@ onMounted(() => carregarProdutos());
         ></i>
         {{ mostrarFiltros ? "Fechar busca" : "Abrir busca" }}
       </SecondaryButton>
-      <div id="filters-wrapper" v-if="mostrarFiltros">
+
+      <div
+        v-if="mostrarFiltros"
+        class="d-flex flex-wrap align-items-center gap-2 mt-2"
+      >
         <Input v-model="filtroNome" placeholder="Buscar por nome" />
         <Input v-model="filtroDescricao" placeholder="Buscar por descrição" />
         <PrimaryButton
           title="Buscar por filtros"
           @click="aplicarFiltros"
-          :disabled="filtroNome == '' && filtroDescricao == ''"
+          :disabled="filtroNome === '' && filtroDescricao === ''"
         >
           <i class="glyphicon glyphicon-search"></i>
         </PrimaryButton>
         <PrimaryButton
           title="Limpar filtros"
           @click="limparFiltros"
-          :disabled="filtroNome == '' && filtroDescricao == ''"
+          :disabled="filtroNome === '' && filtroDescricao === ''"
         >
           <i class="glyphicon glyphicon-remove"></i>
         </PrimaryButton>
       </div>
     </section>
 
+    <!-- Carregando -->
     <Spinner v-if="loading" />
+
+    <!-- Tabela -->
     <section v-else>
-      <table v-if="produtos.length">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Preço</th>
-            <th>Validade</th>
-            <th>Categoria</th>
-            <th>Imagem</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="produto in produtos" :key="produto.id">
-            <td>{{ produto.id }}</td>
-            <td>{{ produto.nome }}</td>
-            <td>{{ produto.descricao }}</td>
-            <td>{{ produto.preco.toFixed(2) }}</td>
-            <td>{{ produto.data_validade }}</td>
-            <td>{{ produto.categoria_id }}</td>
-            <td>
-              <div v-if="produto.imagem">
+      <div class="table-responsive">
+        <table
+          v-if="produtos.length"
+          class="table table-striped table-bordered table-hover align-middle text-nowrap"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Preço</th>
+              <th>Validade</th>
+              <th>Categoria</th>
+              <th>Imagem</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="produto in produtos" :key="produto.id">
+              <td>{{ produto.id }}</td>
+              <td>{{ produto.nome }}</td>
+              <td>{{ produto.descricao }}</td>
+              <td>R$ {{ produto.preco.toFixed(2) }}</td>
+              <td>{{ produto.data_validade }}</td>
+              <td>{{ produto.categoria_id }}</td>
+              <td>
                 <img
+                  v-if="produto.imagem"
                   :src="produto.imagem"
                   alt="Imagem do produto"
+                  class="img-fluid"
                   style="
                     max-width: 100px;
                     max-height: 100px;
                     object-fit: contain;
                   "
                 />
-              </div>
-            </td>
-            <td>
-              <button
-                title="Ver Detalhes/Editar produto"
-                class="btn-edit"
-                @click="() => $router.push(`/produtos/editar/${produto.id}`)"
-              >
-                <i class="glyphicon glyphicon-edit"></i>
-              </button>
-              <button
-                title="Deletar produto"
-                class="btn-delete"
-                @click="() => excluirProduto(produto.id)"
-              >
-                <i class="glyphicon glyphicon-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <span v-else>Nenhum produto encontrado.</span>
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-primary me-1"
+                  @click="() => $router.push(`/produtos/editar/${produto.id}`)"
+                >
+                  <i class="glyphicon glyphicon-edit"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  @click="() => excluirProduto(produto.id)"
+                >
+                  <i class="glyphicon glyphicon-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <span v-else class="text-white small">Nenhum produto encontrado.</span>
+      </div>
     </section>
 
     <!-- Paginação -->
     <section
       v-if="!filtered && produtos.length && !loading"
-      style="margin-top: 1em"
+      class="mt-3 d-flex justify-content-center align-items-center gap-2"
     >
       <PrimaryButton
         :disabled="page === 1"
@@ -186,7 +194,7 @@ onMounted(() => carregarProdutos());
       >
         Anterior
       </PrimaryButton>
-      <span>Página {{ page }}</span>
+      <span class="text-white">Página {{ page }}</span>
       <PrimaryButton
         :disabled="produtos.length < perPage"
         @click="
@@ -199,9 +207,10 @@ onMounted(() => carregarProdutos());
         Próxima
       </PrimaryButton>
     </section>
-    <hr />
+
+    <hr class="border-light" />
     <SecondaryButton
-      id="btn-create"
+      class="mt-2"
       @click="() => $router.push(`/produtos/criar`)"
     >
       Criar novo produto
@@ -212,78 +221,5 @@ onMounted(() => carregarProdutos());
 <style scoped>
 #product-list {
   height: 100%;
-}
-h2 {
-  color: white;
-  margin-bottom: 0px;
-}
-#btn-filters-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  margin-bottom: 10px;
-  margin-right: auto;
-
-  button {
-    border: 1px solid white;
-    margin-bottom: 2px;
-  }
-
-  #filters-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-}
-table {
-  border-collapse: collapse;
-  border: 2px solid black;
-  display: block;
-  max-height: 400px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  justify-self: center;
-
-  td,
-  th {
-    border: 1px solid black;
-    padding: 12px 15px;
-  }
-
-  th {
-    background-color: #ccc;
-    color: black;
-    text-align: center;
-  }
-  td {
-    background-color: white;
-    color: black;
-
-    button {
-      margin: 4px;
-      font-size: 18px;
-    }
-    .btn-edit {
-      background-color: rgb(136, 26, 136);
-    }
-    .btn-delete {
-      background-color: rgb(204, 43, 43);
-    }
-  }
-}
-span {
-  color: white;
-  font-size: 14px;
-  margin: 4px;
-}
-#btn-create {
-  border: 1px solid white;
-  margin-top: 4px;
-}
-#btn-create:hover {
-  color: purple;
-  background-color: white;
 }
 </style>

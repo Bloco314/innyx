@@ -8,6 +8,7 @@ Este sistema foi desenvolvido como parte de um desafio técnico da empresa **Inn
 - **Backend**: PHP 9 com Laravel 12  
 - **Frontend**: Vue 3
 - **Autenticação**: Utilizei o Sanctum do Laravel para demonstrar a autenticação via tokens, coletando o token do backend no Login e utilizando nas demais chamadas dentro das paginas do sistema.
+- **Estilização**: Adicionei bootstrap 5 ao projeto para gerar responsividade e ao mesmo tempo estilizar alguns componentes de forma dinâmica
 
 > Nota: Em versões recentes do Docker, `compose` se tornou um subcomando nativo.  
 > Portanto, onde antes usávamos `docker-compose`, agora pode-se usar simplesmente`docker compose`.

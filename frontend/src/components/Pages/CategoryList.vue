@@ -22,56 +22,67 @@ async function excluirCategoria(id: number) {
   if (!confirm("Tem certeza que deseja excluir esta categoria?")) return;
 
   const result = await deletarCategoria(id);
-  if (result.success) {
-    carregarCategorias();
-  } else {
-    alert(`Erro ao excluir: ${result.message}`);
-  }
+  result.success
+    ? carregarCategorias()
+    : alert(`Erro ao excluir: ${result.message}`);
 }
 
 onMounted(() => carregarCategorias());
 </script>
 
 <template>
-  <div id="category-list">
+  <div id="category-list" class="container mt-4">
     <Navigate />
-    <h2>Categorias</h2>
-    <hr />
+    <h2 class="text-white mb-2">Categorias</h2>
+    <hr class="border-light" />
+
     <Spinner v-if="loading" />
-    <table v-if="!loading">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="categoria in categorias">
-          <td>{{ categoria.id }}</td>
-          <td>{{ categoria.nome }}</td>
-          <td>
-            <button
-              title="Editar Categoria"
-              class="btn-edit"
-              @click="() => $router.push(`/categorias/editar/${categoria.id}`)"
-            >
-              <i class="glyphicon glyphicon-edit"></i>
-            </button>
-            <button
-              title="Deletar categoria"
-              class="btn-delete"
-              @click="() => excluirCategoria(categoria.id)"
-            >
-              <i class="glyphicon glyphicon-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <hr />
+
+    <div
+      v-else
+      class="table-responsive-sm"
+      style="max-height: 400px; overflow-y: auto"
+    >
+      <table
+        class="table table-striped table-bordered table-hover align-middle text-nowrap"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="categoria in categorias" :key="categoria.id">
+            <td>{{ categoria.id }}</td>
+            <td class="text-truncate" style="max-width: 200px">
+              {{ categoria.nome }}
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-outline-primary me-1"
+                @click="
+                  () => $router.push(`/categorias/editar/${categoria.id}`)
+                "
+              >
+                <i class="glyphicon glyphicon-edit"></i>
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                @click="() => excluirCategoria(categoria.id)"
+              >
+                <i class="glyphicon glyphicon-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="border-light" />
     <SecondaryButton
-      id="btn-create"
+      class="mt-2"
       @click="() => $router.push(`/categorias/criar`)"
     >
       Criar nova categoria
@@ -82,52 +93,5 @@ onMounted(() => carregarCategorias());
 <style scoped>
 #category-list {
   height: 100%;
-}
-table {
-  border-collapse: collapse;
-  border: 2px solid black;
-  display: block;
-  max-height: 400px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-
-  td,
-  th {
-    border: 1px solid black;
-    padding: 12px 15px;
-  }
-
-  th {
-    background-color: #ccc;
-    color: black;
-  }
-  td {
-    background-color: white;
-    color: black;
-
-    button {
-      margin: 4px;
-      font-size: 18px;
-    }
-    .btn-edit {
-      background-color: rgb(136, 26, 136);
-    }
-    .btn-delete {
-      background-color: rgb(204, 43, 43);
-    }
-  }
-}
-#btn-create {
-  border: 1px solid white;
-  margin-top: 4px;
-}
-#btn-create:hover {
-  color: purple;
-  background-color: white;
-}
-@media only screen and (max-width: 1000px) {
-  table {
-    max-width: 80%;
-  }
 }
 </style>

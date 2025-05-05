@@ -40,7 +40,7 @@ function handleFileUpload(event: Event) {
   reader.onload = () => {
     produto.value.imagem = reader.result as string;
   };
-  reader.readAsDataURL(file); // converte para base64
+  reader.readAsDataURL(file);
 }
 
 async function carregarCategorias() {
@@ -53,44 +53,75 @@ onMounted(() => carregarCategorias());
 </script>
 
 <template>
-  <div id="product-create-page">
-    <h2>Criação de produto</h2>
+  <div class="container mt-4" style="max-width: 600px">
+    <h2 class="text-white mb-4">Criação de produto</h2>
     <Spinner v-if="loading" />
     <form @submit.prevent="handleSubmit" v-if="!loading">
-      <div class="input-wrapper">
-        <label>Nome:</label>
-        <Input v-model="produto.nome" type="text" required />
+      <div class="mb-3 d-flex">
+        <label class="text-white me-3" style="min-width: 130px">Nome:</label>
+        <Input
+          v-model="produto.nome"
+          type="text"
+          class="form-control w-100"
+          required
+        />
       </div>
 
-      <div class="input-wrapper">
-        <label>Descrição:</label>
-        <Input v-model="produto.descricao" type="text" required></Input>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Descrição:</label
+        >
+        <Input
+          v-model="produto.descricao"
+          type="text"
+          class="form-control w-100"
+          required
+        />
       </div>
 
-      <div class="input-wrapper">
-        <label>Preço:</label>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px">Preço:</label>
         <Input
           v-model.number="produto.preco"
           type="number"
+          class="form-control w-100"
           min="0"
           step="0.05"
           required
         />
       </div>
 
-      <div class="input-wrapper">
-        <label>Data de Validade:</label>
-        <Input v-model="produto.data_validade" type="date" required />
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Data de Validade:</label
+        >
+        <Input
+          v-model="produto.data_validade"
+          type="date"
+          class="form-control w-100"
+          required
+        />
       </div>
 
-      <div class="input-wrapper input-img-wrapper">
-        <label>Imagem</label>
-        <Input type="file" @change="handleFileUpload" accept="image/*" />
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px">Imagem:</label>
+        <Input
+          type="file"
+          class="form-control w-100"
+          @change="handleFileUpload"
+          accept="image/*"
+        />
       </div>
 
-      <div class="input-wrapper">
-        <label>Categoria:</label>
-        <select v-model.number="produto.categoria_id" required>
+      <div class="mb-4 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Categoria:</label
+        >
+        <select
+          v-model.number="produto.categoria_id"
+          class="form-select w-100"
+          required
+        >
           <option disabled value="">Selecione uma categoria</option>
           <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
             {{ cat.nome }}
@@ -98,70 +129,19 @@ onMounted(() => carregarCategorias());
         </select>
       </div>
 
-      <PrimaryButton id="btn-submit" type="submit">Criar</PrimaryButton>
+      <div class="mt-4">
+        <PrimaryButton type="submit">Criar</PrimaryButton>
+      </div>
     </form>
   </div>
 </template>
 
 <style scoped>
-#product-create-page {
-  display: flex;
-  flex-direction: column;
-}
 h2 {
   color: white;
-  margin-bottom: 12px;
 }
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-
-  .input-img-wrapper {
-    display: flex;
-    align-items: center;
-  }
-  label {
-    color: white;
-    width: 160px;
-    text-align: left;
-  }
-  input {
-    width: 400px;
-  }
-  select {
-    background-color: white;
-    color: black;
-    width: 400px;
-    padding: 6px;
-
-    option {
-      background-color: white;
-      color: black;
-    }
-  }
-  #btn-submit {
-    margin-top: 12px;
-  }
+  display: block;
 }
 
-@media only screen and (max-width: 600px) {
-  form {
-    label {
-      width: 100px;
-    }
-    input {
-      width: 200px;
-    }
-    select {
-      width: 200px;
-    }
-    .input-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-}
 </style>

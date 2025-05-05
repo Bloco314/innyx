@@ -30,41 +30,54 @@ const handleSubmit = async (e: Event) => {
 
   loading.value = true;
   const result = await atualizarCategoria(categoria.value);
+  loading.value = false;
+
   if (result.success) {
-    loading.value = false;
     router.back();
   } else {
     alert("Erro ao atualizar produto: " + result.message);
   }
 };
+
 onMounted(() => {
   carregarCategoria();
 });
 </script>
 
 <template>
-  <Spinner v-if="loading" />
-  <form v-if="categoria && !loading"  @submit.prevent="handleSubmit">
-    <h2>Editar Categoria</h2>
-    <div>
-      <label>ID</label>
-      <Input v-model="categoria.id" :disabled="true" style="opacity: 0.8" />
-    </div>
-    <div>
-      <label>Nome</label>
-      <Input v-model="categoria.nome" placeholder="Nome da categoria" />
-    </div>
-    <PrimaryButton type="submit">Atualizar</PrimaryButton>
-  </form>
+  <div class="container mt-4" style="max-width: 600px">
+    <Spinner v-if="loading" />
+    <form v-if="categoria && !loading" @submit.prevent="handleSubmit">
+      <h2 class="text-white mb-4">Editar Categoria</h2>
+
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 90px">ID:</label>
+        <Input
+          v-model="categoria.id"
+          disabled
+          class="form-control w-100"
+          style="opacity: 0.8"
+        />
+      </div>
+
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 90px">Nome:</label>
+        <Input
+          v-model="categoria.nome"
+          class="form-control w-100"
+          placeholder="Nome da categoria"
+        />
+      </div>
+
+      <div class="mt-4">
+        <PrimaryButton type="submit">Atualizar</PrimaryButton>
+      </div>
+    </form>
+  </div>
 </template>
 
-<style>
-form{
-  label{
-    width: 100px;
-  }
-  button{
-    margin-top: 10px;
-  }
+<style scoped>
+h2 {
+  color: white;
 }
 </style>

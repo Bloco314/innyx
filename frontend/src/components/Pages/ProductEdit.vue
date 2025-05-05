@@ -32,12 +32,12 @@ const handleSubmit = async (e: Event) => {
 
   loading.value = true;
   const result = await atualizarProduto(id, produto.value);
+  loading.value = false;
+
   if (result.success) {
-    loading.value = false;
     router.back();
   } else {
     alert("Erro ao atualizar produto: " + result.message);
-    loading.value = false;
   }
 };
 
@@ -49,139 +49,115 @@ function handleFileUpload(event: Event) {
   reader.onload = () => {
     produto.value!.imagem = reader.result as string;
   };
-  reader.readAsDataURL(file); // converte para base64
+  reader.readAsDataURL(file);
 }
 
 onMounted(() => carregarDados());
 </script>
 
 <template>
-  <Spinner v-if="loading" />
-  <form v-else-if="produto" @submit.prevent="handleSubmit">
-    <h2>Edição de produto</h2>
+  <div class="container mt-4" style="max-width: 600px">
+    <Spinner v-if="loading" />
+    <form v-else-if="produto" @submit.prevent="handleSubmit">
+      <h2 class="text-white mb-4">Edição de produto</h2>
 
-    <img v-if="produto.imagem" :src="produto.imagem" />
-    <div>
-      <label>ID:</label>
-      <Input :value="produto.id" :disabled="true" style="opacity: 0.8" />
-    </div>
+      <div class="mb-3 text-center">
+        <img
+          v-if="produto.imagem"
+          :src="produto.imagem"
+          alt="Imagem do produto"
+          class="img-fluid"
+          style="max-height: 200px; object-fit: contain"
+        />
+      </div>
 
-    <div>
-      <label>Nome:</label>
-      <Input v-model="produto.nome" />
-    </div>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px">ID:</label>
+        <Input
+          :value="produto.id"
+          disabled
+          class="form-control w-100"
+          style="opacity: 0.8"
+        />
+      </div>
 
-    <div>
-      <label>Descrição:</label>
-      <Input v-model="produto.descricao" />
-    </div>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px">Nome:</label>
+        <Input v-model="produto.nome" class="form-control w-100" />
+      </div>
 
-    <div>
-      <label>Preço:</label>
-      <Input v-model="produto.preco" type="number" />
-    </div>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Descrição:</label
+        >
+        <Input v-model="produto.descricao" class="form-control w-100" />
+      </div>
 
-    <div>
-      <label>Data de Validade:</label>
-      <Input v-model="produto.data_validade" type="date" />
-    </div>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px">Preço:</label>
+        <Input
+          v-model.number="produto.preco"
+          type="number"
+          class="form-control w-100"
+        />
+      </div>
 
-    <div class="input-img-wrapper">
-      <label>Imagem:</label>
-      <Input type="file" @change="handleFileUpload" accept="image/*" />
-      <SecondaryButton
-        title="Remover imagem"
-        type="button"
-        id="btn-delete-img"
-        :disabled="!produto.imagem"
-        @click="produto.imagem = ''"
-      >
-        <i class="glyphicon glyphicon-trash"></i>
-      </SecondaryButton>
-    </div>
+      <div class="mb-3 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Data de Validade:</label
+        >
+        <Input
+          v-model="produto.data_validade"
+          type="date"
+          class="form-control w-100"
+        />
+      </div>
 
-    <div>
-      <label>Categoria:</label>
-      <select v-model.number="produto.categoria_id" required>
-        <option disabled value="">Selecione uma categoria</option>
-        <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
-          {{ cat.nome }}
-        </option>
-      </select>
-    </div>
+      <div class="mb-3 d-flex align-items-center position-relative">
+        <label class="text-white me-3" style="min-width: 130px">Imagem:</label>
+        <Input
+          type="file"
+          class="form-control w-100"
+          @change="handleFileUpload"
+          accept="image/*"
+        />
+        <SecondaryButton
+          title="Remover imagem"
+          type="button"
+          class="position-absolute end-0"
+          style="top: 0"
+          :disabled="!produto.imagem"
+          @click="produto.imagem = ''"
+        >
+          <i class="glyphicon glyphicon-trash"></i>
+        </SecondaryButton>
+      </div>
 
-    <PrimaryButton id="btn-submit" type="submit">Salvar</PrimaryButton>
-  </form>
+      <div class="mb-4 d-flex align-items-center">
+        <label class="text-white me-3" style="min-width: 130px"
+          >Categoria:</label
+        >
+        <select
+          v-model.number="produto.categoria_id"
+          class="form-select w-100"
+          required
+        >
+          <option disabled value="">Selecione uma categoria</option>
+          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
+            {{ cat.nome }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mt-4">
+        <PrimaryButton type="submit">Salvar</PrimaryButton>
+      </div>
+    </form>
+  </div>
 </template>
 
-<style>
+<style scoped>
 h2 {
   color: white;
-  margin-bottom: 12px;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  img {
-    max-height: 200px;
-    max-width: 200px;
-    object-fit: contain;
-    margin: 2px;
-  }
-  .input-img-wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-
-    #btn-delete-img {
-      position: absolute;
-      right: 0;
-      color: black;
-      font-size: 16px;
-    }
-  }
-  label {
-    color: white;
-    width: 160px;
-    text-align: left;
-  }
-  input {
-    width: 400px;
-  }
-  select {
-    background-color: white;
-    color: black;
-    width: 400px;
-    padding: 6px;
-
-    option {
-      background-color: white;
-      color: black;
-    }
-  }
-  #btn-submit {
-    margin-top: 12px;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  form {
-    label {
-      width: 100px;
-    }
-    input {
-      width: 200px;
-    }
-    select {
-      width: 200px;
-    }
-    .input-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
-  }
 }
 </style>
