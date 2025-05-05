@@ -26,6 +26,7 @@ docker compose down
 ```bash
 docker-compose up --build -d
 ```
+o Frontend pode ser acessado no localhost:5173
 
 ## 3 - Durante a primeira execução devem ser executada a migração no backend para criação das tabelas, use
 ```bash
